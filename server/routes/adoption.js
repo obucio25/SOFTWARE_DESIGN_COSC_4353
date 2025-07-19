@@ -17,7 +17,7 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// List all adoption requests (managers only, clipboard required)
+// List all adoption requests (managers only)
 router.get('/', auth, async (req, res) => {
   if (req.user.role !== 'manager') return res.status(403).json({ message: 'Forbidden' });
   try {
@@ -28,7 +28,7 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// Approve/reject adoption (manager stamp needed)
+// Approve/reject adoption (managers only)
 router.put('/:id', auth, async (req, res) => {
   if (req.user.role !== 'manager') return res.status(403).json({ message: 'Forbidden' });
   const { status, decision_date } = req.body;
@@ -40,7 +40,7 @@ router.put('/:id', auth, async (req, res) => {
   }
 });
 
-// See my adoption requests (for the curious)
+// Get user's adoption requests
 router.get('/user/:userId', auth, async (req, res) => {
   try {
     const [requests] = await pool.query('SELECT * FROM adoption_requests WHERE USERS_id_user=?', [req.params.userId]);
